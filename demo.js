@@ -1,7 +1,7 @@
 funDeclear();
 // funLet();
 // funConst();
-funVar();
+// funVar();
 
 const funConst = () => {
   console.log("fun const");
