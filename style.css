@@ -19,7 +19,7 @@ header h1 {
 }
 .container > .btn-wrapper {
   display: flex;
-  justify-content: start;
+  justify-content: center;
   margin: 20px 0px;
 }
 
@@ -27,7 +27,7 @@ header h1 {
   padding: 10px 50px;
   margin: 0px 10px;
   background-color: rgb(243, 174, 72);
-  border: none;
+  border: 1.5px solid #62866e;
   box-shadow: 2px 8px 8px -9px black;
   color: white;
   font-size: 18px;
@@ -36,28 +36,68 @@ header h1 {
 .container > .btn-wrapper > #btn-add-list:hover {
   transition: all 0.6s;
   transform: translate(-0.3%);
-  background-color: rgb(122, 94, 51);
+  background-color: rgb(87, 68, 40);
 }
+.container > .btn-wrapper > #btn-add-lis:disabled {
+  display: none;
+  background-color: rgba(243, 175, 72, 0);
+}
+
+.btn-wrapper input {
+  width: 300px;
+  background-color: #e8f0fe;
+  border: 2px solid #f3ae48;
+  box-shadow: 2px 8px 8px -9px black;
+  border-radius: 3px;
+  font-size: 18px;
+  padding: 0px 20px;
+  color: #080808;
+}
+.btn-wrapper input:focus {
+  background-color: #f3f3f352;
+}
+.btn-wrapper input::placeholder {
+  color: #181616;
+  opacity: 0.6;
+}
+
 .main-section {
   width: 100%;
-  min-height: 400px;
+  min-height: 470px;
   background-color: #62866e;
   display: flex;
-  justify-content: start;
+  justify-content: center;
 }
 .main-section .card {
-  width: 200px;
-  height: 200px;
-  background-color: #e9f0eb;
+  width: 400px;
+  height: inherit;
+  background-color: #fdfdfdd3;
   transition: ease 0.6s;
-
   margin: 10px 10px;
+  border-radius: 4px;
 }
 .main-section .card div {
   background-color: rgb(20, 99, 99);
-  margin: 2px;
-  text-align: center;
-  color: #e6f3e3;
+  margin: 1px;
+  text-align: left;
+  color: #f7f7f7;
   letter-spacing: 4px;
+  text-transform: capitalize;
   padding: 4px;
+  display: flex;
+  justify-content: space-between;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.add-task-btn {
+  background-color: #94080888;
+  padding: 6px 10px;
+  border: 2px solid red;
+  text-transform: capitalize;
+  color: white;
+  box-shadow: 5px 8px 8px -9px rgb(223, 158, 18);
+  border-radius: 3px;
+}
+.add-task-btn:hover {
+  background: red;
 }
