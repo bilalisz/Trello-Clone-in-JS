@@ -16,6 +16,7 @@
         </header>
 
         <main class="container">
+
             <div class="btn-wrapper">
                 <input type="text" name="name-input" id="id-input" placeholder="T I T L E">
                 <button id="btn-add-list" onclick="handleClickTitle()">Add New List</button>
@@ -38,9 +39,68 @@
 
             <!-- Modal content -->
             <div class="modal-content">
-                <span class="close">&times;</span>
-                <p>Some text in the Modal..</p>
+                <div>
+                    <span class="close">&times;</span>
+                    <h3 class=""><u>Add New Task Form</u></h3>
+                </div>
+                <!-- this div replace by form -->
+                <div class="form">
+                    <div>
+                        <div>
+                            <label for="title">Title:</label>
+                            <input id="title" type="text" placeholder="Title">
+                        </div>
+                        <div>
+                            <label class="desc" for="description">Description:</label>
+                            <input id="description" type="text" placeholder="Description">
+                        </div>
+                        <div>
+                            <label for="assign">Assign:</label>
+                            <input id="assign" type="text" placeholder="Assign">
+                        </div>
+                        <button id="save-item-btn" onclick="handleSubmitItem()">Save</button>
+                    </div>
+                </div>
+
             </div>
+
+        </div>\
+        <!-- update modal  -->
+
+        <!-- modal element -->
+        <div id="myModal" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div>
+                    <span class="close">&times;</span>
+                    <h3 class=""><u>Add New Task Form</u></h3>
+                </div>
+                <!-- this div replace by form -->
+                <div class="form">
+                    <div>
+                        <div>
+                            <label for="u-title">Title:</label>
+                            <input id="u-title" type="text" placeholder="Title">
+                        </div>
+                        <div>
+                            <label class="desc" for="u-description">Description:</label>
+                            <input id="u-description" type="text" placeholder="Description">
+                        </div>
+                        <div>
+                            <label for="u-assign">Assign:</label>
+                            <input id="u-assign" type="text" placeholder="Assign">
+                        </div>
+                        <button id="u-save-item-btn" onclick="handleSubmitItem()">Save</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+
     </body>
     <script src="script.js"></script>
 

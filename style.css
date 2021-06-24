@@ -3,6 +3,43 @@
   padding: 0px;
   box-sizing: border-box;
 }
+.icon {
+  font-size: 20px;
+  width: 30px;
+  height: 30px;
+  background-color: #146363;
+  color: #fff;
+  box-shadow: 0px 1px rgb(189, 187, 187);
+  padding-left: 5px;
+  border-radius: 20px;
+}
+h3 {
+  font-family: serif;
+  color: #f3f7f7;
+}
+label {
+  font-size: 22px;
+  margin-right: 40px;
+  padding: 0px;
+  color: #146363;
+}
+
+input[type="text"] {
+  width: 270px;
+  height: 30px;
+  margin: 20px;
+  padding: 20px 20px;
+  box-shadow: 0px 1px rgb(189, 187, 187);
+  border: none;
+  background-color: rgba(119, 119, 116, 0.678);
+  font-size: 18px;
+  color: #0f5353;
+  border-radius: 2px;
+}
+
+input[type="text"]::placeholder {
+  color: #383737be;
+}
 
 header {
   display: flex;
@@ -24,19 +61,20 @@ header h1 {
 }
 
 .container > .btn-wrapper #btn-add-list {
-  padding: 10px 50px;
-  margin: 0px 10px;
-  background-color: rgb(243, 174, 72);
-  border: 1.5px solid #62866e;
-  box-shadow: 2px 8px 8px -9px black;
+  height: 60px;
+  width: 200px;
+  margin: 0px 15px;
+  background-color: #146363;
+  box-shadow: 2px 8px 8px -6px black;
   color: white;
   font-size: 18px;
   border-radius: 3px;
+  border: none;
 }
 .container > .btn-wrapper > #btn-add-list:hover {
-  transition: all 0.6s;
+  transition: all 0.2s;
   transform: translate(-0.3%);
-  background-color: rgb(87, 68, 40);
+  background-color: #146363d0;
 }
 .container > .btn-wrapper > #btn-add-lis:disabled {
   display: none;
@@ -46,7 +84,7 @@ header h1 {
 .btn-wrapper input {
   width: 300px;
   background-color: #e8f0fe;
-  border: 2px solid #f3ae48;
+  border: 2px solid #146363;
   box-shadow: 2px 8px 8px -9px black;
   border-radius: 3px;
   font-size: 18px;
@@ -66,17 +104,30 @@ header h1 {
   min-height: 470px;
   background-color: #62866e;
   display: flex;
-  justify-content: center;
+  justify-content: start;
 }
 .main-section .card {
   width: 400px;
   height: inherit;
   background-color: #fdfdfdd3;
   transition: ease 0.6s;
-  margin: 10px 10px;
+  margin: 10px auto;
   border-radius: 4px;
+  max-height: 439px;
+  overflow: auto;
+  padding-bottom: 10px;
 }
-.main-section .card div {
+
+/* .main-section .card:nth-child(1) {
+  margin: 10px 10px;
+}
+.main-section .card:nth-child(2) {
+  margin: 10px auto;
+}
+.main-section .card:nth-child(3) {
+  margin: 10px auto;
+} */
+.main-section .card div:first-child {
   background-color: rgb(20, 99, 99);
   margin: 1px;
   text-align: left;
@@ -89,16 +140,44 @@ header h1 {
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
 }
+.main-section .card div:nth-child(2) {
+  background-color: #146363;
+  padding: 10px;
+}
 
 .add-item-wrapper {
   display: block;
 }
 .main-section .card .add-item-wrapper button {
   padding: 5px 10px;
-  background-color: #ffc300f7;
+  background-color: #f7f7f7;
   border: none;
-  color: #f3f3f3;
-  float: right;
+  color: #146363;
+  border-radius: 3px;
+}
+.card .item-card {
+  position: relative;
+  margin: 10px;
+  /* border: 2px solid #146363; */
+  box-shadow: 0px 2px rgb(189, 187, 187);
+
+  background-color: rgba(14, 13, 13, 0.089);
+  padding: 10px;
+}
+.card .item-card:hover .icon {
+  opacity: 1;
+}
+.card .item-card .icon {
+  position: absolute;
+  top: 4%;
+  right: 2%;
+  opacity: 0;
+  cursor: pointer;
+}
+.card .item-card small {
+  position: absolute;
+  right: 0%;
+  bottom: 0%;
 }
 .add-task-btn {
   background-color: #94080888;
@@ -131,11 +210,14 @@ header h1 {
 
 /* Modal Content */
 .modal-content {
-  background-color: #fefefe;
+  background-color: #e7e6e6;
   margin: auto;
   padding: 20px;
   border: 1px solid #888;
   width: 500px;
+}
+.modal-content h3 {
+  color: #0f5353;
 }
 
 /* The Close Button */
@@ -151,4 +233,38 @@ header h1 {
   color: #000;
   text-decoration: none;
   cursor: pointer;
+}
+.form {
+  width: 100%;
+  height: 400px;
+  /* border: 1px solid red; */
+  box-shadow: 1px 1px rgba(12, 12, 12, 0.13);
+
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+  background-color: #0000000e;
+}
+.form div:nth-child(1) {
+  display: flex;
+  width: 70%;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.form button {
+  background-color: #146363;
+  color: #f7f7f7;
+  font-size: 18px;
+  padding: 5px 10px;
+  letter-spacing: 8px;
+  border: none;
+  border-radius: 3px;
+  float: right;
+  margin-top: 20px;
+}
+label .desc {
+  display: none;
+  margin-right: 40px;
 }
