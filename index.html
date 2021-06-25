@@ -68,12 +68,12 @@
         <!-- update modal  -->
 
         <!-- modal element -->
-        <div id="myModal" class="modal">
+        <div id="u-myModal" class="modal">
 
             <!-- Modal content -->
             <div class="modal-content">
                 <div>
-                    <span class="close">&times;</span>
+                    <span id="u-close" onclick="handleModalClose()" class="close">&times;</span>
                     <h3 class=""><u>Add New Task Form</u></h3>
                 </div>
                 <!-- this div replace by form -->
@@ -91,7 +91,13 @@
                             <label for="u-assign">Assign:</label>
                             <input id="u-assign" type="text" placeholder="Assign">
                         </div>
-                        <button id="u-save-item-btn" onclick="handleSubmitItem()">Save</button>
+                        <div>
+                            <label for="u-status">Status:</label>
+                            <select id="u-status" class="select-option">
+                                <option value="" selected>Select</option>
+                            </select>
+                        </div>
+                        <button id="u-item-btn">Update</button>
                     </div>
                 </div>
 
