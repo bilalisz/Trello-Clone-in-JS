@@ -5,6 +5,7 @@ let date = new Date();
 const itemArray = [];
 let currentItem = {};
 let currentCard = {};
+let addCurrentCard = {};
 
 // *******************************************(create Dom Elements methods)************************************************************** */
 
@@ -23,10 +24,9 @@ const getCardTamplet = (cardData) => {
   card.appendChild(titleWrapper);
   titleWrapper.appendChild(title);
   titleWrapper.append(deleteCardBtn);
-  if (cardData.title === "todos" || cardData.title === "todo") {
-    card.appendChild(addItemWrapper);
-    addItemWrapper.appendChild(addItem);
-  }
+
+  card.appendChild(addItemWrapper);
+  addItemWrapper.appendChild(addItem);
 
   //   Set Attributies
   card.setAttribute("class", "card");
@@ -103,19 +103,22 @@ const getIcon = (code, id, onClick) => {
 // ***************************************************( handler events methods )****************************************************** */
 
 const handleClickTitle = () => {
+  // debugger;
   let input = document.getElementById("id-input");
   let value = input.value;
   if (!value) {
     alert("enter title");
   } else {
     let cardObj = {
-      id: cardArray.length + 1 * Math.random(),
+      id: "cardArray" + (cardArray.length + 1),
       title: value,
       timeStamp: getTimeStamp(),
     };
     cardArray.push(cardObj);
     getCardTamplet(cardObj);
     btnStatus();
+
+    addCurrentCard = cardObj;
   }
 };
 
@@ -130,7 +133,8 @@ const handleDelete = (id) => {
   }
 };
 
-const handleSubmitItem = () => {
+const handleSubmitItem = (id) => {
+  // debugger;
   console.log("save item ");
   let modal = document.getElementById("myModal");
   let updateBtn = document.getElementById("u-item-btn");
@@ -138,13 +142,10 @@ const handleSubmitItem = () => {
   if (title.value === "" || description.value == "" || assign.value === "") {
     alert("Please Fill all input field !");
   } else {
-    const todoArray = cardArray.find(
-      (card) =>
-        card.title === "todos".toLowerCase() ||
-        card.title === "todo".toLowerCase()
-    );
+    let card = cardArray.find((card) => card.id === id);
+    console.log("card id or card", card);
     const itemObj = {
-      id: itemArray.length + 1 * Math.random(),
+      id: "itemObj" + (itemArray.length + 1),
       title: title.value,
       description: description.value,
       assign: assign.value,
@@ -152,7 +153,7 @@ const handleSubmitItem = () => {
       timeStamp: getTimeStamp(),
     };
 
-    let Card = document.getElementById(todoArray.id);
+    let Card = document.getElementById(card.id);
     console.log("main card", Card.getAttribute("id"));
     const itemCard = getItemCard(itemObj);
     Card.appendChild(itemCard);
@@ -162,11 +163,10 @@ const handleSubmitItem = () => {
     console.log("item array", itemArray);
 
     currentItem = itemObj;
-    currentCard = todoArray;
 
-    handleModalClose();
+    card = null;
   }
-  //  updateBtn.removeEventListener(handleUpdate(itemObj.id, todoArray.id));
+  ``;
 };
 
 const OpenUpdateBtn = (e) => {
@@ -218,15 +218,13 @@ const btnStatus = () => {
   cardArray.length > 3 ? alert("No more task space is allow! sorry..!") : null;
 };
 
-const getCardNames = () => {
-  return cardArray.map((card) => ({ id: card.id, name: card.title }));
-};
-
 // *************************************************(Modal)******************************************************** */
 
 const modalShow = function () {
   const { modal } = getModal();
   modal.style.display = "block";
+  let btnSave = document.getElementById("save-item-btn");
+  btnSave.addEventListener("click", () => handleSubmitItem(addCurrentCard.id));
 };
 
 const { span } = getModal();
