@@ -197,7 +197,8 @@ const handleSubmitItem = (e) => {
 };
 
 const OpenUpdateBtn = (e) => {
-  console.log("enevt", e);
+  console.log("enevt", e.target.value);
+
   let modal = document.getElementById("u-myModal");
   modal.style.display = "block";
   getSelectTag();
@@ -234,6 +235,7 @@ const handleUpdate = (e) => {
   let itemCard = document.getElementById(updateBtn.value);
 
   let oldItemObj = itemArray.find((item) => item.id === updateBtn.value);
+  console.log("line number 238", oldItemObj);
 
   let updateObj = {
     ...oldItemObj,
@@ -243,12 +245,9 @@ const handleUpdate = (e) => {
   };
   itemArray.splice(updateBtn.value, 1, updateObj);
   console.log(itemArray);
-  //   updateTitle.innerText = title.value;
-  //   updateDescrition.innerText = description.value;
-  //   updateAssign.innerText = assign.value;
-  //   itemCard.appendChild(updateTitle);
-  //   itemCard.appendChild(updateDescrition);
-  //   itemCard.appendChild(updateAssign);
+  updateTitle.innerText = title.value;
+  updateDescrition.innerText = description.value;
+  updateAssign.innerText = assign.value;
   fromCard.removeChild(itemCard);
   toCard.appendChild(itemCard);
   handleModalClose();
@@ -308,7 +307,19 @@ const getSelectTag = () => {
   return status;
 };
 
-// const getMenu = (id) => {
-//   console.log(id);
-//   let menuWrapper=document.createElement()
-// };
+const getMenu = (id) => {
+  console.log(id);
+  let menuWrapper = document.createElement("div");
+  menuWrapper.setAttribute("class", "icon menu");
+  menuWrapper.style.display = "block";
+  menuWrapper.innerHTML = `
+  <ul>
+    <li> update</li>
+    <li>delete</li>
+    <li>edit</li>
+   
+  </ul>
+  `;
+  console.log(menuWrapper);
+  return menuWrapper;
+};
