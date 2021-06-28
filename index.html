@@ -17,6 +17,8 @@
 
         <main class="container">
 
+
+
             <div class="btn-wrapper">
                 <input type="text" name="name-input" id="id-input" placeholder="T I T L E">
                 <button id="btn-add-list" onclick="handleClickTitle()">Add New List</button>
@@ -58,13 +60,17 @@
                             <label for="assign">Assign:</label>
                             <input id="assign" type="text" placeholder="Assign">
                         </div>
+                        <div>
+
+                            <input id="hidden" type="hidden">
+                        </div>
                         <button id="save-item-btn">Save</button>
                     </div>
                 </div>
 
             </div>
 
-        </div>\
+        </div>
         <!-- update modal  -->
 
         <!-- modal element -->
@@ -74,7 +80,7 @@
             <div class="modal-content">
                 <div>
                     <span id="u-close" onclick="handleModalClose()" class="close">&times;</span>
-                    <h3 class=""><u>Add New Task Form</u></h3>
+                    <h3 class=""><u>Update Task Form</u></h3>
                 </div>
                 <!-- this div replace by form -->
                 <div class="form">
@@ -96,6 +102,7 @@
                             <select id="u-status" class="select-option">
                                 <option value="" selected>Select</option>
                             </select>
+                            <input id="hidden" type="hidden">
                         </div>
                         <button id="u-item-btn">Update</button>
                     </div>
@@ -106,8 +113,8 @@
         </div>
 
 
-
     </body>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="script.js"></script>
 
 </html>

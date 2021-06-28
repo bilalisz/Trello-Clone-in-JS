@@ -1,11 +1,19 @@
 console.log("I am working...!");
+
 // Globle Variables
 let cardArray = [];
-let date = new Date();
 const itemArray = [];
-let currentItem = {};
-let currentCard = {};
-let addCurrentCard = {};
+let date = new Date();
+let todoArray = [];
+let goingArray = [];
+let doneArray = [];
+
+document.addEventListener("DOMContentLoaded", function (event) {
+  let btnSave = document.getElementById("save-item-btn");
+  btnSave.addEventListener("click", handleSubmitItem);
+  const updateBtn = document.getElementById("u-item-btn");
+  updateBtn.addEventListener("click", handleUpdate);
+});
 
 // *******************************************(create Dom Elements methods)************************************************************** */
 
@@ -34,10 +42,16 @@ const getCardTamplet = (cardData) => {
   title.innerText = cardData.title;
   deleteCardBtn.innerText = "delete";
   deleteCardBtn.setAttribute("class", "add-task-btn");
-  deleteCardBtn.addEventListener("click", () => handleDelete(cardData.id));
+  deleteCardBtn.addEventListener("click", () => {
+    handleDelete(cardData.id);
+  });
   addItemWrapper.setAttribute("class", "add-item-wrapper");
   addItem.innerText = "Add Item";
-  addItem.addEventListener("click", modalShow);
+  addItem.addEventListener("click", () => {
+    let btnSave = document.getElementById("save-item-btn");
+    btnSave.value = cardData.id;
+    modalShow();
+  });
 };
 
 const getModal = () => {
@@ -74,8 +88,11 @@ const getItemCard = (itemObj) => {
   //   set Attribute
   itemwrapper.setAttribute("class", "item-card");
   itemwrapper.setAttribute("id", id);
+  title.setAttribute("id", "item-title");
+  description.setAttribute("id", "item-description");
+  assign.setAttribute("id", "item-assign");
   //   set values
-  let icon = getIcon("&#128393;", id, OpenUpdateBtn);
+  let icon = getIcon("&#8942;", id, OpenUpdateBtn);
 
   title.innerText = itemObj.title;
   description.innerText = itemObj.description;
@@ -104,10 +121,15 @@ const getIcon = (code, id, onClick) => {
 
 const handleClickTitle = () => {
   // debugger;
+
   let input = document.getElementById("id-input");
+
   let value = input.value;
   if (!value) {
-    alert("enter title");
+    swal(
+      "Enter Title",
+      "Are you try to create a Card. Please Fill the Title input!"
+    );
   } else {
     let cardObj = {
       id: "cardArray" + (cardArray.length + 1),
@@ -117,56 +139,61 @@ const handleClickTitle = () => {
     cardArray.push(cardObj);
     getCardTamplet(cardObj);
     btnStatus();
-
-    addCurrentCard = cardObj;
+    input.value = "";
   }
 };
 
 const handleDelete = (id) => {
-  let confirm = window.confirm("Are you sure!");
   let index = cardArray.indexOf(cardArray.find((card) => card.id === id));
-
-  if (confirm) {
-    document.getElementById(id).remove();
-    cardArray.splice(index, 1);
-    btnStatus();
-  }
+  let confirm = swal({
+    title: "Are you sure?",
+    text: "Once deleted, you will not be able to recover this imaginary file!",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willDelete) => {
+    if (willDelete) {
+      swal("Poof! Your imaginary file has been deleted!", {
+        icon: "success",
+      });
+      document.getElementById(id).remove();
+      cardArray.splice(index, 1);
+      btnStatus();
+    } else {
+      swal("Your imaginary file is safe!");
+    }
+  });
 };
 
-const handleSubmitItem = (id) => {
-  // debugger;
+const handleSubmitItem = (e) => {
   console.log("save item ");
+
+  let btnSave = document.getElementById("save-item-btn");
   let modal = document.getElementById("myModal");
-  let updateBtn = document.getElementById("u-item-btn");
   const { title, description, assign } = getInputEle();
   if (title.value === "" || description.value == "" || assign.value === "") {
-    alert("Please Fill all input field !");
+    swal("Please Fill all input field !", "...and here's the text!");
   } else {
-    let card = cardArray.find((card) => card.id === id);
-    console.log("card id or card", card);
     const itemObj = {
       id: "itemObj" + (itemArray.length + 1),
       title: title.value,
       description: description.value,
       assign: assign.value,
-      //   cardId: todoArray.id,
       timeStamp: getTimeStamp(),
     };
 
-    let Card = document.getElementById(card.id);
-    console.log("main card", Card.getAttribute("id"));
+    let card = document.getElementById(btnSave.value);
+    console.log("main card", card.getAttribute("id"));
     const itemCard = getItemCard(itemObj);
-    Card.appendChild(itemCard);
+    card.appendChild(itemCard);
     itemArray.push(itemObj);
-    console.log("item card", itemCard);
     modal.style.display = "none";
-    console.log("item array", itemArray);
-
-    currentItem = itemObj;
-
-    card = null;
+    // console.log("item card", itemCard);
+    // console.log("item array", itemArray);
   }
-  ``;
+  title.value = "";
+  description.value = "";
+  assign.value = "";
 };
 
 const OpenUpdateBtn = (e) => {
@@ -174,34 +201,58 @@ const OpenUpdateBtn = (e) => {
   let modal = document.getElementById("u-myModal");
   modal.style.display = "block";
   getSelectTag();
+  const updateBtn = document.getElementById("u-item-btn");
+  updateBtn.value = e.path[0].id;
+  let currentCard = document.getElementById("hidden");
+  currentCard.value = e.path[2].id;
+  let title = document.getElementById("u-title");
+  let description = document.getElementById("u-description");
+  let assign = document.getElementById("u-assign");
+  let itemObj = itemArray.find((item) => item.id === updateBtn.value);
+  console.log(itemObj);
+  title.value = itemObj.title;
+  description.value = itemObj.description;
+  assign.value = itemObj.assign;
 };
 
-const handleUpdate = (itemId, cardId) => {
-  //   console.log("update btn is clicked ! ", { itemId, cardId });
-  //   const item = itemArray.find((item) => item.id === itemId);
-  //   console.log("item array", itemArray);
-
-  console.log(currentCard);
-  console.log(currentItem);
-  debugger;
-
-  let title = document.getElementById("u-title").value;
-  let description = document.getElementById("u-description").value;
-  let assign = document.getElementById("u-assign").value;
+const handleUpdate = (e) => {
+  //   debugger;
+  let title = document.getElementById("u-title");
+  let description = document.getElementById("u-description");
+  let assign = document.getElementById("u-assign");
   let status = document.getElementById("u-status");
   let statusValue = status.value;
-  let itemwrapper = document.getElementById(currentItem.id);
-  let currentCardEle = document.getElementById(currentCard.id);
-  let newCardEle = document.getElementById(statusValue);
-  //   let parentNode = currentCardEle.parentNode;
-  handleModalClose();
 
-  console.log("item wrapper", itemwrapper);
-  console.log("current card", currentCardEle);
-  console.log("current item", newCardEle);
-  //   parentNode.replaceChild(itemwrapper, newCardEle.appendChild(itemwrapper));
-  newCardEle.appendChild(itemwrapper);
-  currentCardEle.removeChild(itemwrapper);
+  let updateTitle = document.getElementById("item-title");
+  let updateDescrition = document.getElementById("item-description");
+  let updateAssign = document.getElementById("item-assign");
+
+  let updateBtn = document.getElementById("u-item-btn");
+  let currentCard = document.getElementById("hidden");
+  let fromCard = document.getElementById(currentCard.value);
+  let toCard = document.getElementById(statusValue);
+  let itemCard = document.getElementById(updateBtn.value);
+
+  let oldItemObj = itemArray.find((item) => item.id === updateBtn.value);
+
+  let updateObj = {
+    ...oldItemObj,
+    title: title.value,
+    description: description.value,
+    assign: assign.value,
+  };
+  itemArray.splice(updateBtn.value, 1, updateObj);
+  console.log(itemArray);
+  //   updateTitle.innerText = title.value;
+  //   updateDescrition.innerText = description.value;
+  //   updateAssign.innerText = assign.value;
+  //   itemCard.appendChild(updateTitle);
+  //   itemCard.appendChild(updateDescrition);
+  //   itemCard.appendChild(updateAssign);
+  fromCard.removeChild(itemCard);
+  toCard.appendChild(itemCard);
+  handleModalClose();
+  console.log(updateTitle);
 };
 
 // *************************************************(utility functions)******************************************************** */
@@ -220,11 +271,9 @@ const btnStatus = () => {
 
 // *************************************************(Modal)******************************************************** */
 
-const modalShow = function () {
+const modalShow = function (e) {
   const { modal } = getModal();
   modal.style.display = "block";
-  let btnSave = document.getElementById("save-item-btn");
-  btnSave.addEventListener("click", () => handleSubmitItem(addCurrentCard.id));
 };
 
 const { span } = getModal();
@@ -259,7 +308,7 @@ const getSelectTag = () => {
   return status;
 };
 
-const updateBtn = document.getElementById("u-item-btn");
-updateBtn.onclick = () => handleUpdate(currentItem.id, currentCard.id);
-
-console.log(updateBtn);
+// const getMenu = (id) => {
+//   console.log(id);
+//   let menuWrapper=document.createElement()
+// };
