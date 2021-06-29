@@ -4,13 +4,13 @@
   box-sizing: border-box;
 }
 .icon {
-  font-size: 27px;
+  font-size: 20px;
   width: 30px;
   height: 30px;
   background-color: #146363;
   color: #fff;
   box-shadow: 0px 1px rgb(189, 187, 187);
-  padding-left: 10px;
+  padding-left: 5px;
   border-radius: 20px;
 }
 h3 {
@@ -137,10 +137,11 @@ header h1 {
 .main-section .card:nth-child(2) {
   margin: 10px auto;
 }
-.main-section .card:nth-child(3) {
+/* .main-section .card:nth-child(3) {
   margin: 10px auto;
 } */
 .main-section .card div:first-child {
+  position: relative;
   background-color: rgb(20, 99, 99);
   margin: 1px;
   text-align: left;
@@ -152,6 +153,14 @@ header h1 {
   justify-content: space-between;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
+}
+.main-section .card div:first-child h3 {
+  align-self: center;
+  font-size: 24px;
+}
+.card .item-container {
+  background-color: #e2e8e4;
+  display: block;
 }
 .main-section .card .add-item-wrapper {
   background-color: #146363;
@@ -192,17 +201,19 @@ header h1 {
   right: 0%;
   bottom: 0%;
 }
-.add-task-btn {
-  background-color: #94080888;
+.menu-icon {
+  /* background-color: #14141488; */
   padding: 6px 10px;
-  border: 2px solid red;
   text-transform: capitalize;
+  font-size: 30px;
+
   color: white;
   box-shadow: 5px 8px 8px -9px rgb(223, 158, 18);
   border-radius: 3px;
 }
-.add-task-btn:hover {
-  background: red;
+.menu-icon:hover {
+  background: rgba(34, 34, 34, 0.103);
+  cursor: pointer;
 }
 
 /* Modal css  start 👇*/
@@ -279,7 +290,47 @@ header h1 {
 }
 
 .menu {
+  background-color: #fffdfd;
+  /* border: 1px solid #0f5353; */
+  width: 250px;
+  letter-spacing: normal;
+  border-radius: 5px;
+  position: absolute;
+  top: 80%;
+  right: 1%;
+  padding: 0px 10px;
+  z-index: 1;
+  color: #0f5353;
+  font-size: 16px;
+  box-shadow: 0px 1px 10px 0px rgba(51, 50, 50, 0.479);
+}
+.menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.menu ul li {
+  border-bottom: 2px solid rgba(10, 10, 10, 0.205);
+  padding: 10px 10px;
+  display: flex;
+  justify-content: start;
+}
+.menu ul li:hover {
   background-color: #146363;
-  width: 100px;
-  height: 100px;
+  color: #fff;
+  cursor: pointer;
+}
+.menu ul li:hover span {
+  color: #fff;
+}
+.menu ul li span {
+  font-size: 25px;
+  color: #0f5353;
+}
+.menu ul li:first-child {
+  color: red;
+}
+.menu ul li h4 {
+  align-self: center;
+  margin-left: 30px;
 }

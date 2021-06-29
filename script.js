@@ -1,5 +1,3 @@
-console.log("I am working...!");
-
 // Globle Variables
 let cardArray = [];
 const itemArray = [];
@@ -23,35 +21,42 @@ const getCardTamplet = (cardData) => {
   let card = document.createElement("div");
   let titleWrapper = document.createElement("div");
   let title = document.createElement("h3");
-  let deleteCardBtn = document.createElement("button");
   let addItemWrapper = document.createElement("div");
   let addItem = document.createElement("button");
+  let menu = getMenu(cardData.id + "-menu-icon");
+
+  let menuIcon = getIcon("&#x22EE;", cardData.id + "menu-icon", (e) => {
+    return menu.style.display === "none"
+      ? (menu.style.display = "block")
+      : (menu.style.display = "none");
+  });
 
   //   make Dom hirarchey
   main.appendChild(card);
   card.appendChild(titleWrapper);
   titleWrapper.appendChild(title);
-  titleWrapper.append(deleteCardBtn);
-
+  titleWrapper.append(menuIcon);
+  titleWrapper.appendChild(menu);
   card.appendChild(addItemWrapper);
   addItemWrapper.appendChild(addItem);
 
   //   Set Attributies
   card.setAttribute("class", "card");
   card.setAttribute("id", cardData.id);
-  title.innerText = cardData.title;
-  deleteCardBtn.innerText = "delete";
-  deleteCardBtn.setAttribute("class", "add-task-btn");
-  deleteCardBtn.addEventListener("click", () => {
-    handleDelete(cardData.id);
-  });
+  menu.setAttribute("id", cardData.id + "-menu");
+  menuIcon.setAttribute("class", "menu-icon");
   addItemWrapper.setAttribute("class", "add-item-wrapper");
+
+  title.innerText = cardData.title;
+
   addItem.innerText = "Add Item";
   addItem.addEventListener("click", () => {
     let btnSave = document.getElementById("save-item-btn");
     btnSave.value = cardData.id;
     modalShow();
   });
+  //   let menuDelete = document.getElementById("menu-delete");
+  //   menuDelete.addEventListener("click", () => handleDelete(cardData.id));
 };
 
 const getModal = () => {
@@ -92,7 +97,7 @@ const getItemCard = (itemObj) => {
   description.setAttribute("id", "item-description");
   assign.setAttribute("id", "item-assign");
   //   set values
-  let icon = getIcon("&#8942;", id, OpenUpdateBtn);
+  let icon = getIcon("&#x270E;", id, OpenUpdateBtn);
 
   title.innerText = itemObj.title;
   description.innerText = itemObj.description;
@@ -104,6 +109,7 @@ const getItemCard = (itemObj) => {
   itemwrapper.appendChild(assign);
   itemwrapper.appendChild(time);
   itemwrapper.appendChild(icon);
+
   return itemwrapper;
 };
 
@@ -143,9 +149,11 @@ const handleClickTitle = () => {
   }
 };
 
-const handleDelete = (id) => {
+const handleCardDelete = (cardEle) => {
+  console.log(cardEle);
+  let id = cardEle.getAttribute("id");
   let index = cardArray.indexOf(cardArray.find((card) => card.id === id));
-  let confirm = swal({
+  swal({
     title: "Are you sure?",
     text: "Once deleted, you will not be able to recover this imaginary file!",
     icon: "warning",
@@ -156,7 +164,8 @@ const handleDelete = (id) => {
       swal("Poof! Your imaginary file has been deleted!", {
         icon: "success",
       });
-      document.getElementById(id).remove();
+      let card = document.getElementById(id);
+      card.remove();
       cardArray.splice(index, 1);
       btnStatus();
     } else {
@@ -166,11 +175,10 @@ const handleDelete = (id) => {
 };
 
 const handleSubmitItem = (e) => {
-  console.log("save item ");
-
   let btnSave = document.getElementById("save-item-btn");
   let modal = document.getElementById("myModal");
   const { title, description, assign } = getInputEle();
+
   if (title.value === "" || description.value == "" || assign.value === "") {
     swal("Please Fill all input field !", "...and here's the text!");
   } else {
@@ -179,17 +187,17 @@ const handleSubmitItem = (e) => {
       title: title.value,
       description: description.value,
       assign: assign.value,
+      cardId: btnSave.value,
       timeStamp: getTimeStamp(),
     };
 
     let card = document.getElementById(btnSave.value);
-    console.log("main card", card.getAttribute("id"));
     const itemCard = getItemCard(itemObj);
+
     card.appendChild(itemCard);
+
     itemArray.push(itemObj);
     modal.style.display = "none";
-    // console.log("item card", itemCard);
-    // console.log("item array", itemArray);
   }
   title.value = "";
   description.value = "";
@@ -197,8 +205,6 @@ const handleSubmitItem = (e) => {
 };
 
 const OpenUpdateBtn = (e) => {
-  console.log("enevt", e.target.value);
-
   let modal = document.getElementById("u-myModal");
   modal.style.display = "block";
   getSelectTag();
@@ -210,14 +216,13 @@ const OpenUpdateBtn = (e) => {
   let description = document.getElementById("u-description");
   let assign = document.getElementById("u-assign");
   let itemObj = itemArray.find((item) => item.id === updateBtn.value);
-  console.log(itemObj);
   title.value = itemObj.title;
   description.value = itemObj.description;
   assign.value = itemObj.assign;
 };
 
 const handleUpdate = (e) => {
-  //   debugger;
+  debugger;
   let title = document.getElementById("u-title");
   let description = document.getElementById("u-description");
   let assign = document.getElementById("u-assign");
@@ -235,7 +240,6 @@ const handleUpdate = (e) => {
   let itemCard = document.getElementById(updateBtn.value);
 
   let oldItemObj = itemArray.find((item) => item.id === updateBtn.value);
-  console.log("line number 238", oldItemObj);
 
   let updateObj = {
     ...oldItemObj,
@@ -244,14 +248,12 @@ const handleUpdate = (e) => {
     assign: assign.value,
   };
   itemArray.splice(updateBtn.value, 1, updateObj);
-  console.log(itemArray);
-  updateTitle.innerText = title.value;
-  updateDescrition.innerText = description.value;
-  updateAssign.innerText = assign.value;
+  //   updateTitle.innerText = title.value;
+  //   updateDescrition.innerText = description.value;
+  //   updateAssign.innerText = assign.value;
   fromCard.removeChild(itemCard);
   toCard.appendChild(itemCard);
   handleModalClose();
-  console.log(updateTitle);
 };
 
 // *************************************************(utility functions)******************************************************** */
@@ -288,10 +290,6 @@ const modalClose = (event) => {
 };
 // window.onclick = modalClose;
 
-setTimeout(() => {
-  console.log(itemArray);
-}, 10000);
-
 const handleModalClose = () => {
   const modal = document.getElementById("u-myModal");
   modal.style.display = "none";
@@ -308,18 +306,27 @@ const getSelectTag = () => {
 };
 
 const getMenu = (id) => {
-  console.log(id);
   let menuWrapper = document.createElement("div");
-  menuWrapper.setAttribute("class", "icon menu");
-  menuWrapper.style.display = "block";
+  menuWrapper.setAttribute("class", " menu");
+  menuWrapper.style.display = "none";
+  let cardId = id.split("-")[0];
   menuWrapper.innerHTML = `
   <ul>
-    <li> update</li>
-    <li>delete</li>
-    <li>edit</li>
-   
+    <li onclick=handleCardDelete(${cardId}) id=menu-delete><span>&#9249;</span><h4>Delete</h4></li>
+    <li onclick=handleSortByName(${cardId}) id=menu-edit><span>&#9998;</span><h4>Edit</h4></li>
+    <li id=menu-sort-name><span>&#x25B2;</span><h4>Sort by Name</h4></li>
+    <li id=menu-random-sort><span>&#x25BC;</span><h4>Sort Random</h4></li>
   </ul>
   `;
-  console.log(menuWrapper);
   return menuWrapper;
+};
+
+const handleSortByName = (cardEle) => {
+  let cardId = cardEle.getAttribute("id");
+  console.log(cardId);
+  let cardMenu = document.getElementById(cardId + "-menu");
+  cardMenu.style.display = "none";
+  let childEle = cardEle.childNodes;
+  let sortChild = [...childEle].slice(2);
+  console.log(sortChild);
 };
