@@ -111,7 +111,19 @@
             </div>
 
         </div>
+        <div class="modal-container" id="status-modal-container" style="display: none;">
+            <div class="status-modal-wrapper">
+                <div class="status-modal-header">
+                    <span id="status-modal-close" onclick="closeStatusModal()" class="close">&times;</span>
+                    <h3 class=""><u>Move All Items</u></h3>
+                </div>
+                <select name="status" id="modal-status" class="select-option ">
+                    <option default>Select where to move</option>
 
+                </select>
+                <button class="status-modal-moveall-btn">Move All</button>
+            </div>
+        </div>
 
     </body>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

@@ -207,7 +207,7 @@ const handleSubmitItem = (e) => {
 const OpenUpdateBtn = (e) => {
   let modal = document.getElementById("u-myModal");
   modal.style.display = "block";
-  getSelectTag();
+  getSelectTag("u-status");
   const updateBtn = document.getElementById("u-item-btn");
   updateBtn.value = e.path[0].id;
   let currentCard = document.getElementById("hidden");
@@ -256,20 +256,6 @@ const handleUpdate = (e) => {
   handleModalClose();
 };
 
-// *************************************************(utility functions)******************************************************** */
-
-const getTimeStamp = () => {
-  return `T ${date.getHours()} : ${date.getMinutes()} D ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}  `;
-};
-
-const btnStatus = () => {
-  let btnCard = document.querySelector("#btn-add-list");
-  if (cardArray.length === 3) {
-    btnCard.disabled = true;
-  } else btnCard.disabled = false;
-  cardArray.length > 3 ? alert("No more task space is allow! sorry..!") : null;
-};
-
 // *************************************************(Modal)******************************************************** */
 
 const modalShow = function (e) {
@@ -295,8 +281,8 @@ const handleModalClose = () => {
   modal.style.display = "none";
 };
 
-const getSelectTag = () => {
-  let status = document.getElementById("u-status");
+const getSelectTag = (id) => {
+  let status = document.getElementById(id);
   status.innerHTML = "";
   for (card of cardArray) {
     status.innerHTML += `<option value="${card.id}">${card.title}</option>`;
@@ -313,20 +299,102 @@ const getMenu = (id) => {
   menuWrapper.innerHTML = `
   <ul>
     <li onclick=handleCardDelete(${cardId}) id=menu-delete><span>&#9249;</span><h4>Delete</h4></li>
-    <li onclick=handleSortByName(${cardId}) id=menu-edit><span>&#9998;</span><h4>Edit</h4></li>
-    <li id=menu-sort-name><span>&#x25B2;</span><h4>Sort by Name</h4></li>
-    <li id=menu-random-sort><span>&#x25BC;</span><h4>Sort Random</h4></li>
+    <li onclick=handleMoveAll(${cardId}) id=menu-edit><span>&#10148;</span><h4>Move All</h4></li>
+    <li onclick=handleSortByName(${cardId}) id=menu-sort-name><span>&#x25B2;</span><h4>Sort by Name</h4></li>
+    <li onclick=handleSortRandom(${cardId}) id=menu-random-sort><span>&#x25BC;</span><h4>Sort Random</h4></li>
   </ul>
   `;
   return menuWrapper;
 };
 
 const handleSortByName = (cardEle) => {
+  //   debugger;
   let cardId = cardEle.getAttribute("id");
-  console.log(cardId);
+  let card = document.getElementById(cardId);
+  let filteredItems = itemArray
+    .filter((item) => item.cardId === cardId)
+    .sort((a, b) => (a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1));
   let cardMenu = document.getElementById(cardId + "-menu");
   cardMenu.style.display = "none";
-  let childEle = cardEle.childNodes;
-  let sortChild = [...childEle].slice(2);
-  console.log(sortChild);
+  let childEle = [...cardEle.childNodes].slice(2);
+  let itemObjId = getItemIds(childEle);
+  for (let itemId of itemObjId) {
+    document.getElementById(itemId).remove();
+  }
+  console.log(filteredItems);
+  for (let item of filteredItems) {
+    let itemWrapper = getItemCard(item);
+    card.appendChild(itemWrapper);
+  }
+};
+const handleSortRandom = (cardEle) => {
+  //   debugger;
+  let cardId = cardEle.getAttribute("id");
+  let card = document.getElementById(cardId);
+  let cardMenu = document.getElementById(cardId + "-menu");
+  cardMenu.style.display = "none";
+  let filteredItems = itemArray.filter((item) => item.cardId === cardId);
+
+  console.log("filterd item", filteredItems);
+  let randomSort = filteredItems.sort(() => Math.random() - 0.5);
+  console.log(randomSort);
+
+  let childEle = [...cardEle.childNodes].slice(2);
+  let itemObjId = getItemIds(childEle);
+  for (let itemId of itemObjId) {
+    document.getElementById(itemId).remove();
+  }
+  console.log(filteredItems);
+  for (let item of randomSort) {
+    let itemWrapper = getItemCard(item);
+    card.appendChild(itemWrapper);
+  }
+};
+
+const handleMoveAll = (cardEle) => {
+  console.log(cardEle);
+  getSelectTag("modal-status");
+  closeStatusModal();
+  let cardId = cardEle.getAttribute("id");
+  let cardMenu = document.getElementById(cardId + "-menu");
+  let fromCard = document.getElementById(cardId);
+  let toCard = document.getElementById("modal-status").value;
+  let items = itemArray.filter((item) => item.cardId === cardId);
+  console.log("from card", fromCard);
+  console.log("To card", toCard);
+  console.log("items array", items);
+
+  cardMenu.style.display = "none";
+};
+
+// *************************************************(utility functions)******************************************************** */
+
+const getTimeStamp = () => {
+  return `T ${date.getHours()} : ${date.getMinutes()} D ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}  `;
+};
+
+const btnStatus = () => {
+  let btnCard = document.querySelector("#btn-add-list");
+  if (cardArray.length === 3) {
+    btnCard.disabled = true;
+  } else btnCard.disabled = false;
+  cardArray.length > 3 ? alert("No more task space is allow! sorry..!") : null;
+};
+
+const getItemIds = (childEleArray) => {
+  let itemIds = [];
+  for (let ele of childEleArray) {
+    itemIds.push(ele.id);
+  }
+  return itemIds;
+};
+
+const closeStatusModal = () => {
+  console.log("i am here");
+
+  let statusModal = document.getElementById("status-modal-container");
+
+  return statusModal.style.display === "none"
+    ? (statusModal.style.display = "flex")
+    : (statusModal.style.display = "none");
 };
