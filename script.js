@@ -2,10 +2,7 @@
 let cardArray = [];
 const itemArray = [];
 let date = new Date();
-let todoArray = [];
-let goingArray = [];
-let doneArray = [];
-
+let fromCard;
 document.addEventListener("DOMContentLoaded", function (event) {
   let btnSave = document.getElementById("save-item-btn");
   btnSave.addEventListener("click", handleSubmitItem);
@@ -299,7 +296,7 @@ const getMenu = (id) => {
   menuWrapper.innerHTML = `
   <ul>
     <li onclick=handleCardDelete(${cardId}) id=menu-delete><span>&#9249;</span><h4>Delete</h4></li>
-    <li onclick=handleMoveAll(${cardId}) id=menu-edit><span>&#10148;</span><h4>Move All</h4></li>
+    <li onclick=openStatusModal(${cardId}) id=menu-edit><span>&#10148;</span><h4>Move All</h4></li>
     <li onclick=handleSortByName(${cardId}) id=menu-sort-name><span>&#x25B2;</span><h4>Sort by Name</h4></li>
     <li onclick=handleSortRandom(${cardId}) id=menu-random-sort><span>&#x25BC;</span><h4>Sort Random</h4></li>
   </ul>
@@ -351,20 +348,42 @@ const handleSortRandom = (cardEle) => {
   }
 };
 
-const handleMoveAll = (cardEle) => {
-  console.log(cardEle);
+const openStatusModal = (cardEle) => {
   getSelectTag("modal-status");
   closeStatusModal();
+  fromCard = cardEle;
   let cardId = cardEle.getAttribute("id");
   let cardMenu = document.getElementById(cardId + "-menu");
-  let fromCard = document.getElementById(cardId);
+  cardMenu.style.display = "none";
+};
+
+const handleMoveAll = () => {
+  debugger;
+  closeStatusModal();
+
+  let cardId = fromCard.getAttribute("id");
+  let cardEle = document.getElementById(cardId);
   let toCard = document.getElementById("modal-status").value;
-  let items = itemArray.filter((item) => item.cardId === cardId);
+  let items = itemArray.filter((item) => item.id === cardId);
+  let changeParentId = items.map((item) => {
+    if (item.cardId === cardId) item.cardId = toCard;
+  });
+  // let items = itemArray.filter((item) => item.cardId === cardId);
+  let childEle = [...cardEle.childNodes].slice(2);
+  let itemObjId = getItemIds(childEle);
+  let toCardEle = document.getElementById(toCard);
+  // console.log(childEle);
+  // console.log(itemObjId);
+  for (let itemId of itemObjId) {
+    document.getElementById(itemId).remove();
+  }
+  for (let item of changeParentId) {
+    let itemWrapper = getItemCard(item);
+    toCardEle.appendChild(itemWrapper);
+  }
   console.log("from card", fromCard);
   console.log("To card", toCard);
-  console.log("items array", items);
-
-  cardMenu.style.display = "none";
+  console.log("items array", changeParentId);
 };
 
 // *************************************************(utility functions)******************************************************** */
