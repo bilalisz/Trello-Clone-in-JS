@@ -141,7 +141,7 @@ const handleClickTitle = () => {
     );
   } else {
     let cardObj = {
-      id: "cardArray" + cardArray.length + 1,
+      id: ` cardArray` + cardArray.length + 1,
       title: value,
       timeStamp: getTimeStamp(),
     };
@@ -153,6 +153,7 @@ const handleClickTitle = () => {
 };
 
 const handleCardDelete = (cardEle) => {
+  debugger;
   console.log(cardEle);
   let itemIndex;
   let id = cardEle.getAttribute("id");
@@ -198,7 +199,7 @@ const handleSubmitItem = (e) => {
     swal("Please Fill all input field !", "...and here's the text!");
   } else {
     const itemObj = {
-      id: "itemObj" + (itemArray.length + 1),
+      id: `itemObj${Math.random() - 0.5}`,
       title: title.value,
       description: description.value,
       assign: assign.value,
@@ -444,12 +445,11 @@ const closeStatusModal = () => {
 const handleDeleteItem = (e) => {
   let id = e.target.id;
   let itemId = id.split("-")[0];
-  console.log("delete icon clicked", id);
+  console.log("delete icon clicked", e.target.id);
   console.log("item id", itemId);
   let itemIndex = itemArray.indexOf(
     itemArray.find((item) => item.id === itemId)
   );
-
   swal({
     title: "Are you sure?",
     text: "Once deleted, you will not be able to recover this imaginary file!",
@@ -461,9 +461,17 @@ const handleDeleteItem = (e) => {
       swal("Poof! Your imaginary file has been deleted!", {
         icon: "success",
       });
-      console.log(itemIndex);
-      document.getElementById(itemId).remove();
-      itemArray.splice(itemIndex, 1);
+      let card = document.getElementById(id);
+      card.remove();
+      cardArray.splice(index, 1);
+      for (itemId of itemsId) {
+        itemIndex = itemArray.indexOf(
+          itemArray.find((item) => item.id === itemId)
+        );
+        console.log("item index", itemIndex);
+        itemArray.splice(itemIndex, 1);
+      }
+      btnStatus();
     } else {
       swal("Your imaginary file is safe!");
     }
