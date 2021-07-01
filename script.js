@@ -473,6 +473,6 @@ function getAssign(objData) {
   return seleteTag;
 }
 
-setTimeout(() => {
-  console.log(getAssign(assignApiData));
-}, 4000);
+// setTimeout(() => {
+//   console.log(getAssign(assignApiData));
+// }, 4000);
