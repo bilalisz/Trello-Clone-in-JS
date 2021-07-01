@@ -3,6 +3,7 @@ let cardArray = [];
 const itemArray = [];
 let date = new Date();
 let fromCard;
+let assignApiData = [];
 document.addEventListener("DOMContentLoaded", function (event) {
   let btnSave = document.getElementById("save-item-btn");
   btnSave.addEventListener("click", handleSubmitItem);
@@ -10,6 +11,16 @@ document.addEventListener("DOMContentLoaded", function (event) {
   updateBtn.addEventListener("click", handleUpdate);
 });
 
+window.onload = () => {
+  console.log("I am working");
+  fetch("https://mocki.io/v1/6744ad1c-df19-43ef-99bc-0a92e9a41669")
+    .then((res) => res.json())
+    .then((data) => (assignApiData = data))
+    .catch((e) => console.log(e));
+};
+setTimeout(() => {
+  console.log(assignApiData);
+}, 5000);
 // *******************************************(create Dom Elements methods)************************************************************** */
 
 const getCardTamplet = (cardData) => {
@@ -174,7 +185,12 @@ const handleCardDelete = (cardEle) => {
 const handleSubmitItem = (e) => {
   let btnSave = document.getElementById("save-item-btn");
   let modal = document.getElementById("myModal");
-  const { title, description, assign } = getInputEle();
+  const { title, description } = getInputEle();
+  let assign = document.getElementById("assign");
+  assign.innerHTML = "";
+  for (let data of objData) {
+    assign.innerHTML += `<option value=${data.name}> ${data.name} </option>`;
+  }
 
   if (title.value === "" || description.value == "" || assign.value === "") {
     swal("Please Fill all input field !", "...and here's the text!");
@@ -202,6 +218,7 @@ const handleSubmitItem = (e) => {
 };
 
 const OpenUpdateBtn = (e) => {
+  debugger;
   let modal = document.getElementById("u-myModal");
   modal.style.display = "block";
   getSelectTag("u-status");
@@ -349,6 +366,7 @@ const handleSortRandom = (cardEle) => {
 };
 
 const openStatusModal = (cardEle) => {
+  debugger;
   getSelectTag("modal-status");
   closeStatusModal();
   fromCard = cardEle;
@@ -417,3 +435,44 @@ const closeStatusModal = () => {
     ? (statusModal.style.display = "flex")
     : (statusModal.style.display = "none");
 };
+
+const handleDeleteItem = (e) => {
+  let id = e.target.id;
+  let itemId = id.split("-")[0];
+  console.log("delete icon clicked", id);
+  console.log("item id", itemId);
+  let itemIndex = itemArray.indexOf(
+    itemArray.find((item) => item.id === itemId)
+  );
+
+  swal({
+    title: "Are you sure?",
+    text: "Once deleted, you will not be able to recover this imaginary file!",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willDelete) => {
+    if (willDelete) {
+      swal("Poof! Your imaginary file has been deleted!", {
+        icon: "success",
+      });
+      console.log(itemIndex);
+      document.getElementById(itemId).remove();
+      itemArray.splice(itemIndex, 1);
+    } else {
+      swal("Your imaginary file is safe!");
+    }
+  });
+};
+function getAssign(objData) {
+  let seleteTag = "";
+
+  for (let data of objData) {
+    seleteTag += `<option value=${data.name}> ${data.name} </option>`;
+  }
+  return seleteTag;
+}
+
+setTimeout(() => {
+  console.log(getAssign(assignApiData));
+}, 4000);

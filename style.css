@@ -189,12 +189,10 @@ header h1 {
 .card .item-card:hover .icon {
   opacity: 1;
 }
-.card .item-card .icon {
-  position: absolute;
-  top: 4%;
-  right: 2%;
-  opacity: 0;
-  cursor: pointer;
+.card .item-card .icon-wrapper span:last-child {
+  padding-left: 8px;
+  background-color: #df1818;
+  color: #fff;
 }
 .card .item-card small {
   position: absolute;
