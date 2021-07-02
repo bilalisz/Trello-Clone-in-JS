@@ -270,10 +270,6 @@ const handleUpdate = (e) => {
   let status = document.getElementById("u-status");
   let statusValue = status.value;
 
-  // let updatedTitle = document.getElementById("item-title");
-  // let updatedDescrition = document.getElementById("item-description");
-  // let updatedAssign = document.getElementById("item-assign");
-
   let card = document.getElementById(statusValue);
 
   debugger;
@@ -417,7 +413,7 @@ const handleMoveAll = () => {
     return item.cardId === cardId ? { ...item, cardId: toCard } : { ...item };
   });
   itemArray = newitemArray;
-  // let items = itemArray.filter((item) => item.cardId === cardId);
+
   let childEle = [...cardEle.childNodes].slice(2);
   let itemObjId = getItemIds(childEle);
   let toCardEle = document.getElementById(toCard);
