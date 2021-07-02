@@ -45,7 +45,7 @@ input[type="text"]::placeholder {
   width: 270px;
   height: 30px;
   margin: 20px;
-  padding: 20px 20px;
+  padding: 0px 20px;
   box-shadow: 0px 1px rgb(189 187 187);
   border: none;
   background-color: rgba(105, 97, 97, 0.678);
@@ -185,6 +185,21 @@ header h1 {
 
   background-color: rgba(14, 13, 13, 0.089);
   padding: 10px;
+}
+.item-card .icon-wrapper {
+  cursor: pointer;
+  opacity: 0;
+  width: 100px;
+  height: 29px;
+  /* border: 1px solid blue; */
+  position: absolute;
+  top: 0%;
+  right: 0%;
+  display: flex;
+  justify-content: space-evenly;
+}
+.card .item-card .icon-wrapper:hover {
+  opacity: 1;
 }
 .card .item-card:hover .icon {
   opacity: 1;

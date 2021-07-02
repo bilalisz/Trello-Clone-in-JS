@@ -1,6 +1,6 @@
 // Globle Variables
 let cardArray = [];
-const itemArray = [];
+let itemArray = [];
 let date = new Date();
 let fromCard;
 let assignApiData = [];
@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
 window.onload = () => {
   console.log("I am working");
-  fetch("https://mocki.io/v1/6744ad1c-df19-43ef-99bc-0a92e9a41669")
+  fetch("https://mocki.io/v1/0b876615-7741-46b7-bf9b-80b00a07272b")
     .then((res) => res.json())
     .then((data) => (assignApiData = data))
     .catch((e) => console.log(e));
@@ -59,6 +59,12 @@ const getCardTamplet = (cardData) => {
 
   addItem.innerText = "Add Item";
   addItem.addEventListener("click", () => {
+    let assign = document.getElementById("assign");
+    assign.innerHTML = "";
+    assign.setAttribute("class", "select-option");
+    for (let data of assignApiData) {
+      assign.innerHTML += `<option value=${data.name}> ${data.name} </option>`;
+    }
     let btnSave = document.getElementById("save-item-btn");
     btnSave.value = cardData.id;
     modalShow();
@@ -78,6 +84,7 @@ const getInputEle = () => {
   let title = document.getElementById("title");
   let description = document.getElementById("description");
   let assign = document.getElementById("assign");
+
   return { title, description, assign };
 };
 // const getDiv = (className) => {
@@ -97,6 +104,7 @@ const getItemCard = (itemObj) => {
   let description = document.createElement("h4");
   let assign = document.createElement("h4");
   let time = document.createElement("small");
+  let iconWrapper = document.createElement("div");
 
   //   set Attribute
   itemwrapper.setAttribute("class", "item-card");
@@ -105,7 +113,9 @@ const getItemCard = (itemObj) => {
   description.setAttribute("id", "item-description");
   assign.setAttribute("id", "item-assign");
   //   set values
-  let icon = getIcon("&#x270E;", id, OpenUpdateBtn);
+  iconWrapper.setAttribute("class", "icon-wrapper");
+  let icon = getIcon("&#x270E;", id + "-update", OpenUpdateBtn);
+  let deleteIcon = getIcon("&#128465;", id + "-delete", handleDeleteItem);
 
   title.innerText = itemObj.title;
   description.innerText = itemObj.description;
@@ -116,7 +126,9 @@ const getItemCard = (itemObj) => {
   itemwrapper.appendChild(description);
   itemwrapper.appendChild(assign);
   itemwrapper.appendChild(time);
-  itemwrapper.appendChild(icon);
+  itemwrapper.appendChild(iconWrapper);
+  iconWrapper.appendChild(icon);
+  iconWrapper.appendChild(deleteIcon);
 
   return itemwrapper;
 };
@@ -134,7 +146,7 @@ const getIcon = (code, id, onClick) => {
 // ***************************************************( handler events methods )****************************************************** */
 
 const handleClickTitle = () => {
-  // debugger;
+  //
 
   let input = document.getElementById("id-input");
 
@@ -157,40 +169,10 @@ const handleClickTitle = () => {
   }
 };
 
-const handleCardDelete = (cardEle) => {
-  console.log(cardEle);
-  let id = cardEle.getAttribute("id");
-  let index = cardArray.indexOf(cardArray.find((card) => card.id === id));
-  swal({
-    title: "Are you sure?",
-    text: "Once deleted, you will not be able to recover this imaginary file!",
-    icon: "warning",
-    buttons: true,
-    dangerMode: true,
-  }).then((willDelete) => {
-    if (willDelete) {
-      swal("Poof! Your imaginary file has been deleted!", {
-        icon: "success",
-      });
-      let card = document.getElementById(id);
-      card.remove();
-      cardArray.splice(index, 1);
-      btnStatus();
-    } else {
-      swal("Your imaginary file is safe!");
-    }
-  });
-};
-
 const handleSubmitItem = (e) => {
   let btnSave = document.getElementById("save-item-btn");
   let modal = document.getElementById("myModal");
-  const { title, description } = getInputEle();
-  let assign = document.getElementById("assign");
-  assign.innerHTML = "";
-  for (let data of objData) {
-    assign.innerHTML += `<option value=${data.name}> ${data.name} </option>`;
-  }
+  const { title, description, assign } = getInputEle();
 
   if (title.value === "" || description.value == "" || assign.value === "") {
     swal("Please Fill all input field !", "...and here's the text!");
@@ -217,56 +199,101 @@ const handleSubmitItem = (e) => {
   assign.value = "";
 };
 
+const handleCardDelete = (cardEle) => {
+  console.log(cardEle);
+  let itemIndex;
+  let id = cardEle.getAttribute("id");
+  let index = cardArray.indexOf(cardArray.find((card) => card.id === id));
+  let itemEle = [...cardEle.childNodes].slice(2);
+  let itemsId = getItemIds(itemEle);
+  console.log(itemsId);
+
+  swal({
+    title: "Are you sure?",
+    text: "Once deleted, you will not be able to recover this imaginary file!",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willDelete) => {
+    if (willDelete) {
+      swal("Poof! Your imaginary file has been deleted!", {
+        icon: "success",
+      });
+      let card = document.getElementById(id);
+      card.remove();
+      cardArray.splice(index, 1);
+      for (itemId of itemsId) {
+        itemIndex = itemArray.indexOf(
+          itemArray.find((item) => item.id === itemId)
+        );
+        console.log("item index", itemIndex);
+        itemArray.splice(itemIndex, 1);
+      }
+      btnStatus();
+    } else {
+      swal("Your imaginary file is safe!");
+    }
+  });
+};
+
 const OpenUpdateBtn = (e) => {
-  debugger;
   let modal = document.getElementById("u-myModal");
   modal.style.display = "block";
-  getSelectTag("u-status");
-  const updateBtn = document.getElementById("u-item-btn");
-  updateBtn.value = e.path[0].id;
-  let currentCard = document.getElementById("hidden");
-  currentCard.value = e.path[2].id;
   let title = document.getElementById("u-title");
   let description = document.getElementById("u-description");
   let assign = document.getElementById("u-assign");
-  let itemObj = itemArray.find((item) => item.id === updateBtn.value);
-  title.value = itemObj.title;
-  description.value = itemObj.description;
-  assign.value = itemObj.assign;
+  let setItemId = document.getElementById("u-hidden"); // stor item id in hidden input
+  getSelectTag("u-status");
+
+  assign.setAttribute("class", "select-option");
+  assign.innerHTML = "";
+  for (data of assignApiData) {
+    assign.innerHTML += `<option value=${data.name}>${data.name}</option>`;
+  }
+  let itemId = e.target.id.split("-")[0];
+  setItemId.value = itemId;
+
+  let item = itemArray.find((item) => item.id === itemId);
+  debugger;
+  title.value = item.title;
+  description.value = item.description;
+  assign.value = item.assign;
 };
 
 const handleUpdate = (e) => {
-  debugger;
+  let getItemId = document.getElementById("u-hidden");
+  let itemId = getItemId.value;
+  console.log("item id ", itemId);
   let title = document.getElementById("u-title");
   let description = document.getElementById("u-description");
   let assign = document.getElementById("u-assign");
   let status = document.getElementById("u-status");
   let statusValue = status.value;
 
-  let updateTitle = document.getElementById("item-title");
-  let updateDescrition = document.getElementById("item-description");
-  let updateAssign = document.getElementById("item-assign");
+  // let updatedTitle = document.getElementById("item-title");
+  // let updatedDescrition = document.getElementById("item-description");
+  // let updatedAssign = document.getElementById("item-assign");
 
-  let updateBtn = document.getElementById("u-item-btn");
-  let currentCard = document.getElementById("hidden");
-  let fromCard = document.getElementById(currentCard.value);
-  let toCard = document.getElementById(statusValue);
-  let itemCard = document.getElementById(updateBtn.value);
+  let card = document.getElementById(statusValue);
 
-  let oldItemObj = itemArray.find((item) => item.id === updateBtn.value);
+  debugger;
 
-  let updateObj = {
-    ...oldItemObj,
+  let oldItem = itemArray.find((item) => item.id === itemId);
+  let itemIndex = itemArray.indexOf(oldItem);
+
+  let updateItem = {
+    ...oldItem,
+
     title: title.value,
     description: description.value,
     assign: assign.value,
+    cardId: statusValue,
   };
-  itemArray.splice(updateBtn.value, 1, updateObj);
-  //   updateTitle.innerText = title.value;
-  //   updateDescrition.innerText = description.value;
-  //   updateAssign.innerText = assign.value;
-  fromCard.removeChild(itemCard);
-  toCard.appendChild(itemCard);
+  itemArray.splice(itemIndex, 1, updateItem);
+
+  document.getElementById(itemId).remove();
+  card.append(getItemCard(updateItem));
+
   handleModalClose();
 };
 
@@ -322,7 +349,7 @@ const getMenu = (id) => {
 };
 
 const handleSortByName = (cardEle) => {
-  //   debugger;
+  //
   let cardId = cardEle.getAttribute("id");
   let card = document.getElementById(cardId);
   let filteredItems = itemArray
@@ -342,7 +369,7 @@ const handleSortByName = (cardEle) => {
   }
 };
 const handleSortRandom = (cardEle) => {
-  //   debugger;
+  //
   let cardId = cardEle.getAttribute("id");
   let card = document.getElementById(cardId);
   let cardMenu = document.getElementById(cardId + "-menu");
@@ -366,7 +393,6 @@ const handleSortRandom = (cardEle) => {
 };
 
 const openStatusModal = (cardEle) => {
-  debugger;
   getSelectTag("modal-status");
   closeStatusModal();
   fromCard = cardEle;
@@ -376,16 +402,21 @@ const openStatusModal = (cardEle) => {
 };
 
 const handleMoveAll = () => {
-  debugger;
   closeStatusModal();
 
   let cardId = fromCard.getAttribute("id");
   let cardEle = document.getElementById(cardId);
   let toCard = document.getElementById("modal-status").value;
-  let items = itemArray.filter((item) => item.id === cardId);
+  let items = itemArray.filter((item) => item.cardId === cardId);
+
   let changeParentId = items.map((item) => {
-    if (item.cardId === cardId) item.cardId = toCard;
+    return item.cardId === cardId ? { ...item, cardId: toCard } : { ...item };
   });
+
+  let newitemArray = itemArray.map((item) => {
+    return item.cardId === cardId ? { ...item, cardId: toCard } : { ...item };
+  });
+  itemArray = newitemArray;
   // let items = itemArray.filter((item) => item.cardId === cardId);
   let childEle = [...cardEle.childNodes].slice(2);
   let itemObjId = getItemIds(childEle);
